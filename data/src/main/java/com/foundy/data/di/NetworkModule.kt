@@ -3,7 +3,6 @@ package com.foundy.data.di
 import com.foundy.data.BuildConfig
 import com.foundy.data.api.NoticeApi
 import com.foundy.data.api.UserApi
-import com.foundy.domain.model.Notice
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

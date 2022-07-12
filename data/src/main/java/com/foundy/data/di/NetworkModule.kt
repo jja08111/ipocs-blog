@@ -1,7 +1,9 @@
 package com.foundy.data.di
 
 import com.foundy.data.BuildConfig
+import com.foundy.data.api.NoticeApi
 import com.foundy.data.api.UserApi
+import com.foundy.domain.model.Notice
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,5 +47,11 @@ class NetworkModule {
     @Singleton
     fun provideUserApiService(retrofit: Retrofit): UserApi {
         return retrofit.create(UserApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNoticeApiService(retrofit: Retrofit): NoticeApi {
+        return retrofit.create(NoticeApi::class.java)
     }
 }

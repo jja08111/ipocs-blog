@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel : MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding get() = requireNotNull(_binding)
@@ -25,6 +25,11 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        observeUserListState()
+        initButton()
+    }
+
+    private fun observeUserListState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userListState.collect {
@@ -35,6 +40,12 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun initButton() {
+        binding.noticeButton.setOnClickListener {
+            startNoticeActivity()
         }
     }
 
@@ -50,5 +61,10 @@ class MainActivity : AppCompatActivity() {
     private fun onErrorGettingUsers(e: Exception) = with(binding) {
         progressBar.isVisible = false
         error.text = e.message
+    }
+
+    private fun startNoticeActivity() {
+        val intent = NoticeActivity.getIntent(this)
+        startActivity(intent)
     }
 }

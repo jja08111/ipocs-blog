@@ -25,4 +25,18 @@ class ExampleUnitTest {
             assertTrue(result.users.isNotEmpty())
         }
     }
+
+    @Test
+    fun notice_api() {
+        val api = with(NetworkModule()) {
+            provideNoticeApiService(provideRetrofit(provideHttpClient()))
+        }
+        runBlocking {
+            val result = api.getAllNotices()
+            result.notices.forEach {
+                println(it)
+            }
+            assertTrue(result.notices.isNotEmpty())
+        }
+    }
 }

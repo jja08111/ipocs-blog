@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">presentation</string>
+    <string name="show_notice">공지사항 보기</string>
 </resources>

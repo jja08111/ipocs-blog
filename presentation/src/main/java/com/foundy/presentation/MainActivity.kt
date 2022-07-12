@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initButton()
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userListState.collect {
@@ -35,6 +37,12 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun initButton() {
+        binding.noticeButton.setOnClickListener {
+            startNoticeActivity()
         }
     }
 
@@ -50,5 +58,10 @@ class MainActivity : AppCompatActivity() {
     private fun onErrorGettingUsers(e: Exception) = with(binding) {
         progressBar.isVisible = false
         error.text = e.message
+    }
+
+    private fun startNoticeActivity() {
+        val intent = NoticeActivity.getIntent(this)
+        startActivity(intent)
     }
 }

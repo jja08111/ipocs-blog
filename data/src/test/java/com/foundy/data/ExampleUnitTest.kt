@@ -1,5 +1,7 @@
 package com.foundy.data
 
+import com.foundy.data.di.NetworkModule
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -11,7 +13,16 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun user_api() {
+        val api = with(NetworkModule()) {
+            provideUserApiService(provideRetrofit(provideHttpClient()))
+        }
+        runBlocking {
+            val result = api.getAllUsers()
+            result.users.forEach {
+                println(it)
+            }
+            assertTrue(result.users.isNotEmpty())
+        }
     }
 }

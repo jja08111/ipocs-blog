@@ -9,8 +9,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.foundy.domain.model.Notice
 import com.foundy.presentation.databinding.ActivityNoticeBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -39,28 +39,20 @@ class NoticeActivity : AppCompatActivity() {
     private fun observeNoticeListState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.noticeListState.collect {
-                    when (it) {
-                        is NoticeUiState.Loading -> onLoading()
-                        is NoticeUiState.Success -> onSuccessGettingUsers(it.notices)
-                        is NoticeUiState.Error -> onErrorGettingUsers(it.exception)
-                    }
-                }
+                viewModel.uiState.collect(::updateUi)
             }
         }
     }
 
-    private fun onLoading() = with(binding) {
-        progressBar.isVisible = true
+    private fun updateUi(uiState: NoticeUiState) = with(binding) {
+        progressBar.isVisible = uiState.isFetchingNotices
+        text.text = uiState.notices.joinToString { it.toString() }
+        if (uiState.error != null) {
+            showSnackBar(uiState.error.message ?: "에러 발생")
+        }
     }
 
-    private fun onSuccessGettingUsers(notices: List<Notice>) = with(binding) {
-        progressBar.isVisible = false
-        text.text = notices.joinToString { notices.toString() }
-    }
-
-    private fun onErrorGettingUsers(e: Exception) = with(binding) {
-        progressBar.isVisible = false
-        error.text = e.message
+    private fun showSnackBar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 }

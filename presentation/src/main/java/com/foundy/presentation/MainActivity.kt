@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         text.text = uiState.users.joinToString { it.toString() }
         canWriteNoticeText.text = if (uiState.canUserWriteNotice) "공지 추가 가능" else "불가능"
         if (uiState.error != null) {
-            showSnackBar(uiState.error.message ?: "")
+            showSnackBar(uiState.error.message ?: "에러 발생")
         }
     }
 

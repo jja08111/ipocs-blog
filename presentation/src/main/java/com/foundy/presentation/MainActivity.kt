@@ -7,7 +7,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.foundy.domain.model.User
 import com.foundy.presentation.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -32,13 +31,7 @@ class MainActivity : AppCompatActivity() {
     private fun observeUserListState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userListState.collect {
-                    when (it) {
-                        is MainUiState.Loading -> onLoading()
-                        is MainUiState.Success -> onSuccessGettingUsers(it.users)
-                        is MainUiState.Error -> onErrorGettingUsers(it.exception)
-                    }
-                }
+                viewModel.uiState.collect(::updateUi)
             }
         }
     }
@@ -49,18 +42,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onLoading() = with(binding) {
-        progressBar.isVisible = true
-    }
-
-    private fun onSuccessGettingUsers(users: List<User>) = with(binding) {
-        progressBar.isVisible = false
-        text.text = users.joinToString { users.toString() }
-    }
-
-    private fun onErrorGettingUsers(e: Exception) = with(binding) {
-        progressBar.isVisible = false
-        error.text = e.message
+    private fun updateUi(uiState: MainUiState) = with(binding) {
+        progressBar.isVisible = uiState.isFetchingUsers
+        text.text = uiState.users.joinToString { it.toString() }
+        error.text = uiState.error?.message ?: ""
     }
 
     private fun startNoticeActivity() {

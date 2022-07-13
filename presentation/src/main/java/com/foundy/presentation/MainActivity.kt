@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.foundy.presentation.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -45,11 +46,18 @@ class MainActivity : AppCompatActivity() {
     private fun updateUi(uiState: MainUiState) = with(binding) {
         progressBar.isVisible = uiState.isFetchingUsers
         text.text = uiState.users.joinToString { it.toString() }
-        error.text = uiState.error?.message ?: ""
+        canWriteNoticeText.text = if (uiState.canUserWriteNotice) "공지 추가 가능" else "불가능"
+        if (uiState.error != null) {
+            showSnackBar(uiState.error.message ?: "")
+        }
     }
 
     private fun startNoticeActivity() {
         val intent = NoticeActivity.getIntent(this)
         startActivity(intent)
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 }

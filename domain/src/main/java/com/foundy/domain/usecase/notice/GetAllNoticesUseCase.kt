@@ -1,4 +1,4 @@
-package com.foundy.domain.usecase
+package com.foundy.domain.usecase.notice
 
 import com.foundy.domain.repository.NoticeRepository
 import javax.inject.Inject

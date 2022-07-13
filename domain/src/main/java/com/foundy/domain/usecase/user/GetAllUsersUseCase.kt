@@ -1,4 +1,4 @@
-package com.foundy.domain.usecase
+package com.foundy.domain.usecase.user
 
 import com.foundy.domain.repository.UserRepository
 import javax.inject.Inject

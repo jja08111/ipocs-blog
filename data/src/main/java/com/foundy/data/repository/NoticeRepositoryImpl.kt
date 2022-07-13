@@ -17,4 +17,17 @@ class NoticeRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun canWriteNotice(userId: Int): Result<Boolean> {
+        return try {
+            val response = dataSource.canWriteNotice(userId)
+            if (response.success) {
+                Result.success(true)
+            } else {
+                throw Exception(response.message)
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

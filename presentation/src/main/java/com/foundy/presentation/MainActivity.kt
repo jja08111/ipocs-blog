@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUi(uiState: MainUiState) = with(binding) {
-        progressBar.isVisible = uiState.isFetchingUsers
+        progressBar.isVisible = uiState.isFetching
         text.text = uiState.users.joinToString { it.toString() }
         canWriteNoticeText.text = if (uiState.canUserWriteNotice) "공지 추가 가능" else "불가능"
         if (uiState.error != null) {

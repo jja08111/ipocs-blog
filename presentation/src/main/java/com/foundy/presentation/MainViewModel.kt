@@ -33,12 +33,13 @@ class MainViewModel @Inject constructor(
     private fun fetchUserList() {
         fetchUserListJob?.cancel()
         fetchUserListJob = viewModelScope.launch {
+            _uiState.update { it.copy(isFetchingUsers = true) }
             val result = getAllUsersUseCase()
             _uiState.update {
                 if (result.isSuccess) {
-                    it.copy(users = result.getOrNull()!!)
+                    it.copy(users = result.getOrNull()!!, isFetchingUsers = false)
                 } else {
-                    it.copy(error = result.exceptionOrNull()!!)
+                    it.copy(error = result.exceptionOrNull()!!, isFetchingUsers = false)
                 }
             }
         }
@@ -47,12 +48,19 @@ class MainViewModel @Inject constructor(
     private fun fetchCanUserWriteNotice(userId: Int) {
         fetchCanUserWriteNoticeJob?.cancel()
         fetchCanUserWriteNoticeJob = viewModelScope.launch {
+            _uiState.update { it.copy(isFetchingCanUserWriteNotices = true) }
             val result = canWriteNoticeUseCase(userId)
             _uiState.update {
                 if (result.isSuccess) {
-                    it.copy(canUserWriteNotice = result.getOrNull()!!)
+                    it.copy(
+                        canUserWriteNotice = result.getOrNull()!!,
+                        isFetchingCanUserWriteNotices = false
+                    )
                 } else {
-                    it.copy(error = result.exceptionOrNull()!!)
+                    it.copy(
+                        error = result.exceptionOrNull()!!,
+                        isFetchingCanUserWriteNotices = false
+                    )
                 }
             }
         }

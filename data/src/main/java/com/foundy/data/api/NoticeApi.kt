@@ -13,8 +13,8 @@ interface NoticeApi {
     @FormUrlEncoded
     @POST("notices")
     suspend fun canWriteNotice(
-        @Field("title") title: String = "",
-        @Field("content") content: String = "",
+        @Field("title") title: String = "123",
+        @Field("content") content: String = "123",
         @Field("userId") userId: Int
     ): NoticeWritePermissionEntity
 }
